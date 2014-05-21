@@ -1,0 +1,84 @@
+<!DOCTYPE project>
+<project name="example-error-webapp" default="build">
+    <property environment="env" />
+    
+    <taskdef resource="aQute/bnd/ant/taskdef.properties" classpath="lib/biz.aQute.bnd-2.3.0.jar" />
+    
+    <macrodef name="compile-java">
+            <!-- id of the path that contains the sources to compile -->
+            <attribute name="source.dir.id" />
+            <!-- where to put the .class files -->
+            <attribute name="dest.dir" default="bin" />
+            <!-- string to put after the -Xlint argument, e.g., empty string to check for warnings, ":none" to ignore -->
+            <attribute name="xlint" default="" />
+            <element name="path-entries" implicit="yes" optional="yes" />
+            <sequential>
+                
+                <property name="boot.classpath.dir" value="${env.JAVA_HOME}/jre/lib" />
+                <pathconvert property="boot.classpath">
+                                            <fileset dir="${boot.classpath.dir}" includes="**/*.jar" />
+                                        </pathconvert>
+                                
+                <echo level="info">${bp.exe.javac} with arg: -Xlint@{xlint} to: @{dest.dir}</echo>
+                <echo level="info">source version: ${ant.build.javac.source} target version: ${ant.build.javac.target}</echo>
+                <echo level="info">bootclasspath: ${boot.classpath}</echo>
+                <mkdir dir="@{dest.dir}"/>
+                <javac destdir="@{dest.dir}" debug="false" includeAntRuntime="false" fork="true" 
+                    executable="${env.JAVA_BIN}/javac"
+                    bootclasspath="${boot.classpath}">
+                    <src refid="@{source.dir.id}" />
+                    <classpath>
+                        <path-entries />
+                    </classpath>
+                    <compilerarg value="-Xlint@{xlint}" />
+                </javac>
+            </sequential>
+        </macrodef>
+    
+    <path id="src.dir">
+            <pathelement location="src"/>
+        </path>
+    
+    <path id="src.lib">
+        <pathelement location="lib/primefaces-5.0.jar"/>
+        <pathelement location="lib/atmosphere-runtime-2.1.4.jar" />
+        <pathelement location="lib/slf4j-api-1.7.2.jar"/>
+        <pathelement location="lib/commons-lang-2.6.jar"/>
+        <pathelement location="lib/commons-fileupload-1.1.1.jar"/>
+        <pathelement location="lib/javaee-api-6.0.jar"/>
+     </path>
+    
+    
+    <target name="build" depends="build-bundle"/>
+    
+    
+    <target name="clean">
+        <delete quiet="true">
+            <fileset dir="build" includes="*.jar" />
+        </delete>
+    </target>
+    
+    <target name="compile">
+        <compile-java source.dir.id="src.dir">
+            <!-- This should point to the source directory and libraries of the entity being compiled. -->
+            <path refid="src.lib" />
+        </compile-java>
+    </target>
+    
+    
+    <target name="build-bundle" depends="compile">
+            <!-- build.id is set when building at the root build.xml, set to unknown if not building from root build.xml -->
+            <property name="build.id" value="unknown" /> 
+            <available file="example.bnd" property="bnd-file-found" />
+            <fail unless="bnd-file-found" message="${unit.name}.bnd file not found"/>            
+            <!-- Override this property in build.xml if there are additional classpath entries needed -->
+            <property name="bundle.classpath.extra" value="" />
+            <mkdir dir="build"/>
+            <bnd classpath="bin,lib/biz.aQute.bnd.annotation-2.3.0.jar" 
+                output="build/example-error.jar" 
+                failok="true" 
+                exceptions="true" 
+                files="example.bnd" />
+        </target>
+    
+</project>

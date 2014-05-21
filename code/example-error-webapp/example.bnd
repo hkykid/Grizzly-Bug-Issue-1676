@@ -1,0 +1,71 @@
+Web-ContextPath: /test
+Bundle-Version: 0.1.0
+Bundle-Description: Bundle containing example error for grizzly
+Bundle-Name: Example Application
+Bundle-SymbolicName: com.example.grizzly.error
+# TD: The com.google.common.* package should be under the Conditional-Package header but currently there is a bug with
+# BND where the packages listed in the Conditional-Package header do not get placed within the WEB-INF folder for
+# web applications.
+Private-Package: example.*
+
+#Note that any components defined in this bundle cannot be referenced by a JSF managed class such
+#as managed beans and singletons so service components should be avoided
+Service-Component:
+
+-wab: WebContent/
+-wablib: lib/primefaces-5.0.jar, \
+        lib/atmosphere-runtime-2.1.4.jar, \
+        lib/slf4j-api-1.7.2.jar, \
+        lib/collections-2.1.jar, \
+        lib/commons-fileupload-1.1.1.jar, \
+        lib/commons-io-1.3.1.jar, \
+        lib/commons-lang-2.6.jar, \
+        lib/slf4j-simple-1.7.2.jar
+        
+Bundle-Vendor: me
+# several packages could be used by Primefaces but currently is not:
+# com.lowagie.text is for DataExporter (PDF)
+# com.sun.syndication is for ROME RSS feeds
+# org.apache.poi is for DataExporter (Excel)
+# eu.infomas.annotation scans classes for specified annotations
+# org.eclipse.jetty is a web server and javax.servlet containter
+# org.jboss.servlet.http is another type of servlet implementation
+# org.mortbay.util.ajax is an implementation of ajax with JSON support
+# org.apache.catalina.comet is Tomcat implementation of Comet
+# org.apache.catalina.websocket is Tomcat implementation of websockets
+# org.apache.coyote.http11.upgrade is component that supports HTTP/1.1 protocol for catalina
+# org.apache.tomcat.util.http.mapper implements server mapping rules for Tomcat
+# com.sun.enterprise.web.connector.grizzly.comet contains a comet implementation 
+# org.glassfish.grizzly is glassfish provided Grizzly implementation
+# javax.websocket is the Java JSR356 websocket API 
+# org.apache.shiro is a Java security framework that does authentication and cryptography
+# org.atmosphere.jboss.as.websockets is an atmosphere package used for JBoss websocket support
+# org.atmosphere.jboss.websockets is an atmosphere package used for JBoss websocket support
+# org.jboss.vfs is a JBoss package which provides support for accessing file system resources
+# weblogic.websocket WebLogic server implementation of websockets
+# com.hazelcast is a clustering and highly scalable data distribution platform for Java
+# net.sf.ehcache is a standards-based cache for boosting performance, offloading your database, and simplifying scalability
+Import-Package: \
+    !com.lowagie.text.*, \
+    !com.sun.syndication.*, \
+    !org.apache.poi.*, \
+    !eu.infomas.annotation, \
+    !org.eclipse.jetty.*, \
+    !org.jboss.servlet.http, \
+    !org.mortbay.util.ajax, \
+    !org.apache.catalina.comet, \
+    !org.apache.catalina.websocket, \
+    !org.apache.coyote.http11.upgrade, \
+    !org.apache.tomcat.util.http.mapper, \
+    !com.sun.enterprise.web.connector.grizzly.comet, \
+    !com.sun.grizzly.*, \
+    !javax.websocket.*, \
+    !org.apache.shiro.*, \
+    !org.atmosphere.jboss.as.websockets.*, \
+    !org.atmosphere.jboss.websockets.*, \
+    !org.jboss.vfs.*, \
+    !weblogic.websocket.*, \
+    !com.hazelcast.*, \
+    !net.sf.ehcache.*, \
+    !javax.portlet.*, \
+    *
